@@ -24,9 +24,10 @@ function createVisualization() {
     // Create a force simulation
     const simulation = d3
       .forceSimulation(data.nodes)
-      .force("link", d3.forceLink(data.links).distance(100))
+      .force("link", d3.forceLink(data.links).distance(100).id((d) => d.id))
       .force("charge", d3.forceManyBody().strength(-300))
-      .force("center", d3.forceCenter(400, 300));
+      .force("center", d3.forceCenter(400, 400))
+      .force("box", boxForce(0, 0, 800, 800));
   
     // Create the links
     let link = svg
@@ -98,15 +99,13 @@ function createVisualization() {
       const distance = Math.sqrt(
         Math.pow(d.x - youNode.x, 2) + Math.pow(d.y - youNode.y, 2)
       );
-      const threshold = 50; // Adjust this value as needed
+      const threshold = 80; // Adjust this value as needed
   
       if (
         (d.id.startsWith("Positive") || d.id.startsWith("Negative")) &&
         distance <= threshold
       ) {
-        // Create a link between the dragged node and the "You" node
-        data.links.push({ source: d, target: youNode });
-  
+ 
         // Add associated outcomes and update the visualization
         addAssociatedOutcomes(d, youNode);
       } else {
@@ -134,13 +133,11 @@ function createVisualization() {
         positiveOutcomes.forEach((outcome) => {
           data.nodes.push(outcome);
           data.links.push({ source: target, target: outcome });
-          data.links.push({ source: source, target: outcome });
         });
       } else if (source.id.startsWith("Negative")) {
         negativeOutcomes.forEach((outcome) => {
           data.nodes.push(outcome);
           data.links.push({ source: target, target: outcome });
-          data.links.push({ source: source, target: outcome });
         });
       }
   
@@ -193,6 +190,16 @@ function createVisualization() {
     }
   
     console.log("Visualization created.");
+  }
+
+  function boxForce(x1, y1, x2, y2) {
+    return (alpha) => {
+      for (let i = 0, n = data.nodes.length; i < n; ++i) {
+        const node = data.nodes[i];
+        node.x = Math.max(x1 + 20, Math.min(x2 - 20, node.x));
+        node.y = Math.max(y1 + 20, Math.min(y2 - 20, node.y));
+      }
+    };
   }
   
   document.addEventListener("DOMContentLoaded", createVisualization);
