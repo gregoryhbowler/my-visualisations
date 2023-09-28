@@ -2,6 +2,9 @@
 <html>
 <head>
   <meta charset="utf-8">
+  <!-- Added the viewport meta tag to control layout on mobile browsers -->
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
   <style>
     circle {
       fill: #69b3a2;
@@ -16,9 +19,23 @@
       text-anchor: middle;
       dy: .35em;
     }
+
+    /* Media query for mobile devices */
+    @media (max-width: 768px) {
+       /* Increase font size for labels on mobile */
+       text {
+           font-size: 18px;
+       }
+
+       /* Increase circle size on mobile */
+       circle {
+           r: 20;  /* Adjust this value as needed */
+       }
+    }
   </style>
- <script src="https://d3js.org/d3.v6.min.js"></script>
- <script src="family_of_origin.js"></script>
+
+  <script src="https://d3js.org/d3.v6.min.js"></script>
+  <script src="family_of_origin.js"></script>
 </head>
 <body>
 </body>
