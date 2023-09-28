@@ -142,6 +142,19 @@ simulation.velocityDecay(0.6); // Increase the rate of decay for node velocities
           d.x = d.fx = Math.max(padding, Math.min(800 - padding, event.x));
           d.y = d.fy = Math.max(padding, Math.min(600 - padding, event.y));
 
+           // Update the position of the dragged node immediately
+           d3.select(this)
+          .attr("cx", d.x)
+          .attr("cy", d.y);
+
+                // Update the links connected to the dragged node immediately
+          link
+          .filter(link => link.source === d || link.target === d)
+          .attr("x1", d => d.source.x)
+          .attr("y1", d => d.source.y)
+          .attr("x2", d => d.target.x)
+          .attr("y2", d => d.target.y);
+
           // After setting the position of the dragged node, invoke the custom force to adjust the position of outcome nodes
           maintainFixedDistance(1,data);
           
